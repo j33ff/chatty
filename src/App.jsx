@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import MessageList from "./MessageList.jsx";
 import ChatBar from "./ChatBar.jsx"
 import NavBar from "./NavBar.jsx"
-import Message from "./Message.jsx"
+
 
 
 // // in App.jsx
@@ -57,9 +57,8 @@ class App extends Component {
     return (
       <div>
       <NavBar name={this.state.title}/>
-      <MessageList username={this.state.currentUser.name} />
-      <ChatBar />
-      <Message />
+      <MessageList username={this.state.currentUser.name} messages={this.state.messages} />
+      <ChatBar user={this.state.currentUser}/>
       </div>
       );
 
