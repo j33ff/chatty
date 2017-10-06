@@ -35,36 +35,51 @@ class App extends Component {
    };
    this.socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
-    // TODO have switch statement to handle different types of messages
-    this.handleMsgReceived(data);
 
-    // switch (data.type) {
-    //   case 'textMessage': {
-    //     this.handleMsgReceived(data)
-    //   }
-    //   case 'editUsername': {
-    //     this.handleUserChange(data)
-    //   }
-        // case 'onlineUsers': {
-    //   this.handleUserCountChange(data)
-    // }
-    // }
+    // console.log(data);
+    // TODO have switch statement to handle different types of messages
+    // this.handleMsgReceived(data);
+
+    switch (data.type) {
+      case 'editUser':
+        this.handleEditUser(data)
+        this.handleMsgReceived(data)
+        console.log('editUser');
+        break;
+
+      case 'textMessage':
+        this.handleMsgReceived(data)
+        console.log('textMessage');
+        break;
+
+        case 'userCount':
+        this.handleOnlineUsers(data)
+        console.log('userCount');
+        break;
+    }
    }
   }
 
   handleMsgReceived = (message) => {
+    console.log(message);
     const messages = this.state.messages.concat(message);
     this.setState({ messages });
   }
 
-  // TODO create another function to handle changing username
-  // TODO add this function to the first input of chat bar
-  // pretty much same thing as message, expect the type is different
-  // TODO the function above must change state of the currentUser object
+  handleOnlineUsers = (online)=>{
+    const onlineUsers = online.online
+    this.setState({ onlineUsers: onlineUsers });
+  }
+
+  handleEditUser = (user)=>{
+
+  }
+
+
 
   addMessage = (message)  => {
     // TODO: add another key for type of message (in this case just 'textMessage' or something)
-    const newMessage = {username: this.state.currentUser.name, content: message};
+    const newMessage = {username: this.state.currentUser.name, content: message, type: "textMessage"};
 
     // this.setState({
     //   messages: this.state.messages.concat(newMessage)
@@ -75,11 +90,13 @@ class App extends Component {
 
   editUser = (name) => {
 
-    const newName = {username: name}
+    const oldName = this.state.currentUser.name;
+    const newName = name;
     console.log(name);
     const names = this.state.messages.concat(newName);
-    this.setState({ names });
-    this.socket.send(JSON.stringify(newName));
+    this.setState({ currentUser:{ name: newName}  });
+    this.socket.send(JSON.stringify({type: "editUser", message: `${oldName} changed their name to ${newName}`}));
+
 
   }
 
