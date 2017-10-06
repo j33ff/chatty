@@ -79,7 +79,7 @@ class App extends Component {
     const names = this.state.messages.concat(newName);
     this.setState({ names });
     this.socket.send(JSON.stringify(newName));
-    c
+
   }
 
 
@@ -87,7 +87,7 @@ class App extends Component {
   // console.log("Rendering <App/>");
   return (
     <div>
-    <NavBar name={this.state.title}/>
+    <NavBar name={this.state.title} onlineUsers={this.state.onlineUsers}/>
     <MessageList username={this.state.currentUser.name} messages={this.state.messages} />
     <ChatBar user={this.state.currentUser} addMessage={this.addMessage}/>
     </div>
