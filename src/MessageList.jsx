@@ -10,7 +10,6 @@ class MessageList extends Component {
     let messages = this.props.messages.map((message, index) =>{
       return <Message message = {message} key = {index}/>
     })
-    console.log(messages);
     return (
 
       <main className="messages">

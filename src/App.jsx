@@ -23,60 +23,57 @@ import NavBar from "./NavBar.jsx"
 //   // more code here..
 // }
 
-
-
-
-
-
 class App extends Component {
-  constructor(props) {
 
+  constructor(props) {
     super(props);
     this.state = {
       title: "chatty",
-
-
-
-    currentUser: {name: "Anonymous"}, // optional. if currentUser is not defined, it means the user is Anonymous
-    messages: [
-      {
-        username: "Bob",
-        content: "Has anyone seen my marbles?",
-      },
-      {
-        username: "Anonymous",
-        content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-      }
-    ]
-  }
-//-------------------------------------------
-}
-
-componentDidMount() {
- this.socket = new WebSocket("ws://localhost:3001");
-
-}
-
-
-addMessage = (message)  => {
- console.log(typeof message);
- const newMessage = {username: currentUser.username, content: currentUser.content};
- const messages = this.state.messages.concat(newMessage);
- this.setState({messages:messages})
-}
-
-
-    render(){
-    // console.log("Rendering <App/>");
-    return (
-      <div>
-      <NavBar name={this.state.title}/>
-      <MessageList username={this.state.currentUser.name} messages={this.state.messages} />
-      <ChatBar user={this.state.currentUser} addMessage={this.addMessage}/>
-      </div>
-      );
-
+      currentUser: {name: "Anonymous"}, // optional. if currentUser is not defined, it means the user is Anonymous
+      messages: [
+        {
+          username: "Bob",
+          content: "Has anyone seen my marbles?",
+        },
+        {
+          username: "Anonymous",
+          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
+        }
+      ]
     }
+  }
+
+  componentDidMount() {
+   this.socket = new WebSocket("ws://localhost:3001");
+   this.socket.onopen = (event) => {
+    console.log('Socket connected!');
+   };
+   this.socket.onmessage = (event) => {
+    console.log(event.data);
+   }
+  }
+
+  addMessage = (message)  => {
+    const newMessage = {username: this.state.currentUser.name, content: message};
+
+    const messages = this.state.messages.concat(newMessage);
+    this.setState({ messages });
+
+    this.socket.send(JSON.stringify(newMessage));
+  }
+
+
+  render(){
+  // console.log("Rendering <App/>");
+  return (
+    <div>
+    <NavBar name={this.state.title}/>
+    <MessageList username={this.state.currentUser.name} messages={this.state.messages} />
+    <ChatBar user={this.state.currentUser} addMessage={this.addMessage}/>
+    </div>
+    );
+
+  }
 }
 
 export default App;
