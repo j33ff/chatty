@@ -8,16 +8,17 @@ class ChatBar extends Component {
   onKeyDown(event) {
     if (event.keyCode === 13) {
       event.preventDefault();
+      console.log('press enter')
       this.props.addMessage(event.target.value);
       event.target.value = "";
     }
   }
 
   onEditName(event){
-    if (event.keycode === 13){
+    if (event.keyCode === 13){
       event.preventDefault();
       this.props.editUser(event.target.value);
-      event.target.value = "";
+
     }
   }
 

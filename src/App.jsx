@@ -42,10 +42,10 @@ class App extends Component {
     //   case 'textMessage': {
     //     this.handleMsgReceived(data)
     //   }
-    //   case 'changeUsername': {
+    //   case 'editUsername': {
     //     this.handleUserChange(data)
     //   }
-        // case 'userCount': {
+        // case 'onlineUsers': {
     //   this.handleUserCountChange(data)
     // }
     // }
@@ -66,8 +66,9 @@ class App extends Component {
     // TODO: add another key for type of message (in this case just 'textMessage' or something)
     const newMessage = {username: this.state.currentUser.name, content: message};
 
-    const messages = this.state.messages.concat(newMessage);
-    this.setState({ messages });
+    // this.setState({
+    //   messages: this.state.messages.concat(newMessage)
+    // });
 
     this.socket.send(JSON.stringify(newMessage));
   }
@@ -89,7 +90,7 @@ class App extends Component {
     <div>
     <NavBar name={this.state.title} onlineUsers={this.state.onlineUsers}/>
     <MessageList username={this.state.currentUser.name} messages={this.state.messages} />
-    <ChatBar user={this.state.currentUser} addMessage={this.addMessage}/>
+    <ChatBar user={this.state.currentUser} addMessage={this.addMessage} editUser={this.editUser}/>
     </div>
     );
 
