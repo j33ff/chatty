@@ -5,29 +5,12 @@ import NavBar from "./NavBar.jsx"
 
 
 
-// // in App.jsx
-// componentDidMount() {
-//   console.log("componentDidMount <App />");
-//   setTimeout(() => {
-//     console.log("Simulating incoming message");
-//     // Add a new message to the list of messages in the data store
-//     const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
-//     const messages = this.state.messages.concat(newMessage)
-//     // Update the state of the app component.
-//     // Calling setState will trigger a call to render() in App and all child components.
-//     this.setState({messages: messages})
-//   }, 3000);
-// }
-
-// render() {
-//   // more code here..
-// }
-
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      onlineUsers: 0,
       title: "chatty",
       currentUser: {name: "Anonymous"}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [
@@ -43,23 +26,60 @@ class App extends Component {
     }
   }
 
+
+
   componentDidMount() {
    this.socket = new WebSocket("ws://localhost:3001");
    this.socket.onopen = (event) => {
     console.log('Socket connected!');
    };
    this.socket.onmessage = (event) => {
-    console.log(event.data);
+    const data = JSON.parse(event.data)
+    // TODO have switch statement to handle different types of messages
+    this.handleMsgReceived(data);
+
+    // switch (data.type) {
+    //   case 'textMessage': {
+    //     this.handleMsgReceived(data)
+    //   }
+    //   case 'changeUsername': {
+    //     this.handleUserChange(data)
+    //   }
+        // case 'userCount': {
+    //   this.handleUserCountChange(data)
+    // }
+    // }
    }
   }
 
+  handleMsgReceived = (message) => {
+    const messages = this.state.messages.concat(message);
+    this.setState({ messages });
+  }
+
+  // TODO create another function to handle changing username
+  // TODO add this function to the first input of chat bar
+  // pretty much same thing as message, expect the type is different
+  // TODO the function above must change state of the currentUser object
+
   addMessage = (message)  => {
+    // TODO: add another key for type of message (in this case just 'textMessage' or something)
     const newMessage = {username: this.state.currentUser.name, content: message};
 
     const messages = this.state.messages.concat(newMessage);
     this.setState({ messages });
 
     this.socket.send(JSON.stringify(newMessage));
+  }
+
+  editUser = (name) => {
+
+    const newName = {username: name}
+    console.log(name);
+    const names = this.state.messages.concat(newName);
+    this.setState({ names });
+    this.socket.send(JSON.stringify(newName));
+    c
   }
 
 

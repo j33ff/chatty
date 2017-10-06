@@ -13,13 +13,22 @@ class ChatBar extends Component {
     }
   }
 
+  onEditName(event){
+    if (event.keycode === 13){
+      event.preventDefault();
+      this.props.editUser(event.target.value);
+      event.target.value = "";
+    }
+  }
+
   render(){
     return (
       <footer className="chatbar">
         <input
           className="chatbar-username"
           defaultValue={this.props.user.name}
-          placeholder="Your Name (Optional)" />
+          placeholder="Your Name (Optional)"
+          onKeyDown = {this.onEditName.bind(this)} />
         <input
           className="chatbar-message"
           placeholder="Type a message and hit ENTER"
