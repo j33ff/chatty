@@ -12,7 +12,7 @@ class App extends Component {
     this.state = {
       onlineUsers: 0,
       title: "chatty",
-      currentUser: {name: "Anonymous"}, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: {name: "Anonymous"},
       messages: [
         {
           username: "Bob",
@@ -35,10 +35,6 @@ class App extends Component {
    };
    this.socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
-
-    // console.log(data);
-    // TODO have switch statement to handle different types of messages
-    // this.handleMsgReceived(data);
 
     switch (data.type) {
       case 'editUser':
@@ -78,12 +74,9 @@ class App extends Component {
 
 
   addMessage = (message)  => {
-    // TODO: add another key for type of message (in this case just 'textMessage' or something)
+
     const newMessage = {username: this.state.currentUser.name, content: message, type: "textMessage"};
 
-    // this.setState({
-    //   messages: this.state.messages.concat(newMessage)
-    // });
 
     this.socket.send(JSON.stringify(newMessage));
   }
@@ -102,7 +95,7 @@ class App extends Component {
 
 
   render(){
-  // console.log("Rendering <App/>");
+
   return (
     <div>
     <NavBar name={this.state.title} onlineUsers={this.state.onlineUsers}/>
